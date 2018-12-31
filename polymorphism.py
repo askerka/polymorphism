@@ -2,6 +2,7 @@ from collections import UserDict
 from inspect import (
     Parameter, isclass, isfunction, ismethoddescriptor, signature, ismethod
 )
+from operator import attrgetter
 from types import FunctionType, MemberDescriptorType, MethodType
 from typing import cast, Any, Dict, List, Union
 
@@ -90,23 +91,26 @@ class MultiMethod:
                 )
 
             methods = ((t, self._methods[t]) for t in possible_types)
-            methods = filter(  # type: ignore
-                # Class object can be passed only to descriptor
-                lambda x: not ismethoddescriptor(x[-1]) and isclass(instance),
-                methods
-            )
 
             for types, method in methods:
+                # Class object can be passed only to descriptor
+                if isclass(instance) and not ismethoddescriptor(method):
+                    continue
+
                 actual_method = sanitize_method(method, instance)
-                method_sig = signature(actual_method)
+                sig = signature(actual_method)
 
                 try:
-                    arguments = method_sig.bind(*args, **kwargs).arguments
+                    arguments = sig.bind(*args, **kwargs).arguments
                 except TypeError:
                     continue
 
-                actual_types = tuple(map(type, arguments.values()))
-                if actual_types == call_types:
+                actual_types = list(map(type, arguments.values()))
+                sig_types = list(
+                    map(attrgetter('annotation'), sig.parameters.values())
+                )
+
+                if actual_types == sig_types:
                     return actual_method(**arguments)
 
         elif self._methods.get(call_types):

@@ -3,7 +3,7 @@ from inspect import (
     Parameter, isclass, isfunction, ismethoddescriptor, signature, ismethod
 )
 from types import FunctionType, MemberDescriptorType, MethodType
-from typing import Dict, Any, cast, Union, List
+from typing import cast, Any, Dict, List, Union
 
 __all__ = ['overload', 'Polymorphism', 'PolymorphismMeta']
 
@@ -21,7 +21,7 @@ def sanitize_method(
     elif ismethoddescriptor(method):
         descriptor = cast(MemberDescriptorType, method)
         if not isclass(instance):
-            return descriptor.__get__(instance, instance.__class__)
+            return descriptor.__get__(instance, type(instance))
         else:
             return descriptor.__get__(None, instance)
 
@@ -56,7 +56,9 @@ class MultiMethod:
 
         for param in method_sig.parameters.values():
             if param.annotation is Parameter.empty:
-                raise TypeError('Argument {} should be annotated'.format(param))
+                raise TypeError(
+                    'Argument {} should be annotated'.format(param)
+                )
 
             if param.default is not Parameter.empty:
                 self._methods[tuple(types)] = method
@@ -119,10 +121,10 @@ class MultiMethod:
 class MultiDict(UserDict):
     def __setitem__(self, key: str, item: Any) -> None:
         if (
-                not (isfunction(item) or ismethoddescriptor(item))
-                or self.get(key) is None
+                not (isfunction(item) or ismethoddescriptor(item)) or
+                self.get(key) is None
         ):
-            super().__setitem__(key, item)
+            return super().__setitem__(key, item)
 
         method = self[key]
         if not isinstance(method, MultiMethod):

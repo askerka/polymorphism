@@ -1,6 +1,6 @@
 from collections import UserDict
 from inspect import (
-    Parameter, isclass, isfunction, ismethoddescriptor, signature, ismethod
+    Parameter, isclass, isfunction, ismethoddescriptor, signature
 )
 from operator import attrgetter
 from types import FunctionType, MemberDescriptorType, MethodType
@@ -16,10 +16,7 @@ def sanitize_method(
         method: AnyMethodType,
         instance: Any = object
 ) -> MethodType:
-    if ismethod(method):
-        return cast(MethodType, method)
-
-    elif ismethoddescriptor(method):
+    if ismethoddescriptor(method):
         descriptor = cast(MemberDescriptorType, method)
         if not isclass(instance):
             return descriptor.__get__(instance, type(instance))
@@ -30,8 +27,7 @@ def sanitize_method(
         function = cast(FunctionType, method)
         return MethodType(function, instance)
 
-    else:
-        raise TypeError
+    raise RuntimeError
 
 
 class SingleDict(UserDict):
@@ -53,12 +49,24 @@ class MultiMethod:
     def overload(self, method: FunctionOrDescriptorType) -> 'MultiMethod':
         types = []  # type: List[type]
         actual_method = sanitize_method(method, object())
-        method_sig = signature(actual_method)
 
-        for param in method_sig.parameters.values():
+        try:
+            sig = signature(actual_method)
+        except ValueError:
+            raise TypeError(
+                'Descriptor should save wrapped '
+                'function  under "__wrapped__" name'
+            )
+
+        for param in sig.parameters.values():
             if param.annotation is Parameter.empty:
                 raise TypeError(
-                    'Argument {} should be annotated'.format(param)
+                    'Argument "{}" should be annotated'.format(param)
+                )
+
+            if param.kind in {Parameter.VAR_KEYWORD, Parameter.VAR_POSITIONAL}:
+                raise TypeError(
+                    'Argument "{}" shouldn\'t be variable length'.format(param)
                 )
 
             if param.default is not Parameter.empty:
@@ -100,10 +108,7 @@ class MultiMethod:
                 actual_method = sanitize_method(method, instance)
                 sig = signature(actual_method)
 
-                try:
-                    arguments = sig.bind(*args, **kwargs).arguments
-                except TypeError:
-                    continue
+                arguments = sig.bind(*args, **kwargs).arguments
 
                 actual_types = list(map(type, arguments.values()))
                 sig_types = list(
@@ -122,13 +127,17 @@ class MultiMethod:
         raise TypeError('Method for types {} not exists'.format(call_types))
 
 
+def is_overridable(obj) -> bool:
+    return ismethoddescriptor(obj) or isfunction(obj)
+
+
 class MultiDict(UserDict):
     def __setitem__(self, key: str, item: Any) -> None:
-        if (
-                not (isfunction(item) or ismethoddescriptor(item)) or
-                self.get(key) is None
-        ):
+        if self.get(key) is None or not is_overridable(self.get(key)):
             return super().__setitem__(key, item)
+
+        if not is_overridable(item):
+            raise TypeError
 
         method = self[key]
         if not isinstance(method, MultiMethod):

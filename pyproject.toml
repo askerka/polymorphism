@@ -6,6 +6,7 @@ repository = "https://github.com/asduj/polymorphism"
 authors = ["asduj <asduj@ya.ru>"]
 license = "MIT"
 keywords = ["polymorphism", "multiple dispatch", "ad hoc"]
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = ">=3.4"

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "polymorphism"
+version = "0.1.0"
+description = "Ad hoc polymorphism for Python classes!"
+repository = "https://github.com/asduj/polymorphism"
+authors = ["asduj <asduj@ya.ru>"]
+license = "MIT"
+keywords = ["polymorphism", "multiple dispatch", "ad hoc"]
+
+[tool.poetry.dependencies]
+python = ">=3.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.0"
+pytest-cov = "^2.6"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

@@ -3,7 +3,7 @@ from typing import Tuple, Any, Dict
 
 import pytest  # type: ignore
 
-from polymorphism import Polymorphism
+from polymorphism import Polymorphism, overload
 
 
 def test_overload():
@@ -246,6 +246,24 @@ def test_class_method_on_instance():
     assert Simple().calc(1, 2) == int
 
 
+def test_class_method_on_class():
+    # noinspection PyMethodMayBeStatic,PyRedeclaration
+    class Simple(Polymorphism):
+        def calc(self, x: int, y: int) -> Tuple[type, type]:
+            return int, int
+
+        @staticmethod
+        def calc(x: int, y: float) -> Tuple[type, type]:
+            return int, float
+
+        @classmethod
+        def calc(cls, x: int, y: str) -> Tuple[type, type]:
+            return int, str
+
+    # noinspection PyCallByClass
+    assert Simple.calc(1, y='2') == (int, str)
+
+
 def test_static_method():
     # noinspection PyMethodMayBeStatic,PyRedeclaration
     class Simple(Polymorphism):
@@ -340,3 +358,24 @@ def test_mismatched_call():
 
     with pytest.raises(TypeError, match='not exists'):
         Simple().calc(1, 2.0)
+
+
+def test_overload_decorator():
+    # noinspection PyMethodMayBeStatic,PyRedeclaration
+    class Simple:
+        @overload
+        def calc(self, x: int, y: int) -> type:
+            return int
+
+        @calc.overload
+        def calc_str(self, x: str, y: str) -> type:
+            return str
+
+        # noinspection PyNestedDecorators
+        @calc.overload
+        @classmethod
+        def calc_float(cls, x: float, y: float) -> type:
+            return float
+
+    # noinspection PyCallByClass
+    assert Simple.calc(1.0, 2.0) == float

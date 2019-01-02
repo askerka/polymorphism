@@ -65,7 +65,7 @@ The idea to implement polymorphism is not new. Many libraries `implement <https:
 
 But they do not support use with classes or standard type annotation.
 
-The basic idea of the implementation was inspired by the greatest book `Python Cookbook 3rd Edition <http://shop.oreilly.com/product/0636920027072.do>`_ by David Beazley and Brian K. Jones. But the implementation in the book did not support usage of keyword arguments!
+The basic idea of the implementation was inspired by the great book `Python Cookbook 3rd Edition <http://shop.oreilly.com/product/0636920027072.do>`_ by David Beazley and Brian K. Jones. But the implementation in the book did not support usage of keyword arguments!
 
 Advantages
 ----------

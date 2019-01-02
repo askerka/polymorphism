@@ -2,7 +2,7 @@ from collections import UserDict
 from inspect import Parameter, isclass, ismethoddescriptor, signature
 from operator import attrgetter
 from types import MethodType
-from typing import cast, Any, Dict, List
+from typing import cast, Any, Dict, List, Union
 
 from .helpers import is_overridable, sanitize_method
 from .types import OneTimeSetDict
@@ -101,13 +101,14 @@ class MultiMethod:
 
 class MultiDict(UserDict):
     def __setitem__(self, key: str, item: Any) -> None:
-        if self.get(key) is None or not is_overridable(self.get(key)):
+        value = self.get(key)
+        if value is None or not is_overridable(value):
             return super().__setitem__(key, item)
 
         if not is_overridable(item):
-            raise TypeError
+            raise TypeError('Method "{}" is shaded by attribute'.format(key))
 
-        method = self[key]
+        method = cast(Union[FunctionOrDescriptorType, MultiMethod], value)
         if not isinstance(method, MultiMethod):
             method = MultiMethod(method)
             super().__setitem__(key, method)

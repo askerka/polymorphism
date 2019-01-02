@@ -9,6 +9,7 @@ keywords = ["polymorphism", "multiple dispatch", "ad hoc"]
 
 [tool.poetry.dependencies]
 python = ">=3.4"
+pytest-cov = "^2.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.0"

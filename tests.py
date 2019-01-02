@@ -161,7 +161,7 @@ def test_complicated_descriptor_without_convention():
 
 
 def test_data_descriptor_overload():
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='shade'):
         # noinspection PyMethodMayBeStatic,PyRedeclaration
         class Simple(Polymorphism):
             def calc(self, x: int, y: int) -> type:

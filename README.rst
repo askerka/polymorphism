@@ -83,7 +83,7 @@ In addition to named arguments the library allows:
 
 * Using any name for instance, not only ``self``
 
-For all check is raised ``TypeError`` exception.
+For all checks is raised ``TypeError`` exception.
 
 Limitations
 -----------

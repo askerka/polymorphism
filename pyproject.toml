@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "polymorphism"
-version = "0.1.0"
+version = "0.1.1"
 description = "Ad hoc polymorphism for Python classes!"
 repository = "https://github.com/asduj/polymorphism"
 authors = ["asduj <asduj@ya.ru>"]

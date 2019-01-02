@@ -63,7 +63,7 @@ Why?
 ----
 The idea to implement polymorphism is not new. Many libraries `implement <https://github.com/mrocklin/multipledispatch>`_ this idea. Even the `standard library <http://docs.python.org/3.4/library/functools.html#functools.singledispatch>`_ has an implementation.
 
-But they do not support use with classes.
+But they do not support use with classes or standard type annotation.
 
 The basic idea of the implementation was inspired by the greatest book `Python Cookbook 3rd Edition <http://shop.oreilly.com/product/0636920027072.do>`_ by David Beazley and Brian K. Jones. But the implementation in the book did not support usage of keyword arguments!
 

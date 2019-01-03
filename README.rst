@@ -1,3 +1,5 @@
+.. highlight:: python
+
 Ad hoc polymorphism for Python classes!
 =====================================================
 
@@ -7,11 +9,12 @@ Installation
 
     pip install polymorphism
 
-polymorphism support python 3.4+
+``polymorphism`` support python 3.4+
 
 Usage
 -----
 To use the ``polymorphism`` simply inherit from the ``Polymorphism`` class::
+
 
     from polymorphism import Polymorphism
 
@@ -69,8 +72,6 @@ The basic idea of the implementation was inspired by the great book `Python Cook
 
 Advantages
 ----------
-In addition to named arguments the library allows:
-
 * Use standard and custom descriptors
 * Use naming (keyword) arguments
 * Checks for:
@@ -142,7 +143,7 @@ polymorphism checks the class at the time of creation::
         def calc(self, x: int, y: int, z: int = 3) -> None:
             pass
 
-The below example will raise ``TypeError`` exception because ``calc`` method overloaded with ``z`` parameter with default value and it is impossible distinct last method from first.
+The above example will raise ``TypeError`` exception because ``calc`` method overloaded with ``z`` parameter with default value and it is impossible distinct last method from first.
 
 ``polymorphism`` will raise ``TypeError`` exception on any wrong overloading, so you don't need worry about correctness of it.
 

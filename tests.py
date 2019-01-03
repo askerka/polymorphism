@@ -52,7 +52,7 @@ def test_dispatch_with_only_keyword():
     assert simple.calc('1', '2') == str
 
 
-def test_call_only_keyword_arguments():
+def test_call_keyword_arguments():
     # noinspection PyMethodMayBeStatic,PyRedeclaration
     class Simple(Polymorphism):
         def calc(self, x: int, y: int) -> type:
@@ -294,7 +294,7 @@ def test_ambiguous_overload_default_argument():
                 return int
 
 
-def test_ambiguous_overload_static_method():
+def test_ambiguous_overload_class_method():
     with pytest.raises(
             TypeError, match=r'Overloading .* \({0}, {0}\) types'.format(int)
     ):
@@ -308,7 +308,7 @@ def test_ambiguous_overload_static_method():
                 return int
 
 
-def test_ambiguous_overload_class_method():
+def test_ambiguous_overload_static_method():
     with pytest.raises(
             TypeError, match=r'Overloading .* \({0}, {0}\) types'.format(int)
     ):

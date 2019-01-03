@@ -134,7 +134,7 @@ While use ``overload`` decorator place it on top::
 
 With ``overload`` only first method name matter. Other methods can have any other names.
 
-polymorphism checks the class at the time of creation::
+``polymorphism`` checks the class at the creation time::
 
     class Simple(Polymorphism):
         def calc(self, x: int, y: int) -> None:
@@ -152,4 +152,4 @@ See more examples in `tests.py <https://github.com/asduj/polymorphism/blob/maste
 To-do
 -----
 
-* Complex types for dispatching like ``List[int]``
+* Complex and builtin types for dispatching like ``List[int]`` or ``Number``

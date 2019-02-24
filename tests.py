@@ -173,7 +173,7 @@ def test_data_descriptor_overload():
 
 
 def test_var_positional_arguments():
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='variable length'):
         # noinspection PyMethodMayBeStatic,PyRedeclaration
         class Simple(Polymorphism):
             def calc(self, x: int, *y: Tuple[int]) -> type:
@@ -184,7 +184,7 @@ def test_var_positional_arguments():
 
 
 def test_var_keyword_arguments():
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match='variable length'):
         # noinspection PyMethodMayBeStatic,PyRedeclaration
         class Simple(Polymorphism):
             def calc(self, x: int, y: int) -> type:
